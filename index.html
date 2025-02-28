@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js"></script>
+</head>
+<body>
+    <h2>Upload an Image</h2>
+    <input type="file" id="imageInput">
+    <button onclick="uploadImage()">Upload</button>
+    <p id="status"></p>
+    <img id="uploadedImage" style="max-width: 300px; display: none;">
+
+    <script>
+        // 🔹 Replace with your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBRYeyBR9H89O94zbukxAw44jJ2NTAyqc",
+            authDomain: "powerautomate-28d24.firebaseapp.com",
+            projectId: "powerautomate-28d24",
+            storageBucket: "powerautomate-28d24.firebasestorage.app",
+            messagingSenderId: "675526712990",
+            appId: "1:675526712990:web:632eab85cd567a1cb2258f"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
+        function uploadImage() {
+            const file = document.getElementById("imageInput").files[0];
+            if (!file) return alert("Select an image first!");
+
+            const storageRef = storage.ref("images/" + file.name);
+            storageRef.put(file).then(snapshot => {
+                snapshot.ref.getDownloadURL().then(url => {
+                    document.getElementById("uploadedImage").src = url;
+                    document.getElementById("uploadedImage").style.display = "block";
+                    document.getElementById("status").innerText = "Upload successful!";
+                });
+            }).catch(error => {
+                document.getElementById("status").innerText = "Upload failed: " + error.message;
+            });
+        }
+    </script>
+</body>
+</html>
